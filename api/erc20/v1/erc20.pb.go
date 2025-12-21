@@ -26,6 +26,7 @@ type GetERC20BalanceRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ContractAddress string                 `protobuf:"bytes,1,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"` // ERC20 contract address
 	OwnerAddress    string                 `protobuf:"bytes,2,opt,name=owner_address,json=ownerAddress,proto3" json:"owner_address,omitempty"`          // Address to query balance for
+	ContractType    string                 `protobuf:"bytes,3,opt,name=contract_type,json=contractType,proto3" json:"contract_type,omitempty"`          // Contract type: "standard" or "ownable" (default: "standard")
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -70,6 +71,13 @@ func (x *GetERC20BalanceRequest) GetContractAddress() string {
 func (x *GetERC20BalanceRequest) GetOwnerAddress() string {
 	if x != nil {
 		return x.OwnerAddress
+	}
+	return ""
+}
+
+func (x *GetERC20BalanceRequest) GetContractType() string {
+	if x != nil {
+		return x.ContractType
 	}
 	return ""
 }
@@ -145,6 +153,7 @@ func (x *GetERC20BalanceResponse) GetDecimals() uint32 {
 type GetERC20InfoRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ContractAddress string                 `protobuf:"bytes,1,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty"` // ERC20 contract address
+	ContractType    string                 `protobuf:"bytes,2,opt,name=contract_type,json=contractType,proto3" json:"contract_type,omitempty"`          // Contract type: "standard" or "ownable" (default: "standard")
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -182,6 +191,13 @@ func (*GetERC20InfoRequest) Descriptor() ([]byte, []int) {
 func (x *GetERC20InfoRequest) GetContractAddress() string {
 	if x != nil {
 		return x.ContractAddress
+	}
+	return ""
+}
+
+func (x *GetERC20InfoRequest) GetContractType() string {
+	if x != nil {
+		return x.ContractType
 	}
 	return ""
 }
@@ -1237,6 +1253,8 @@ type DeployERC20Request struct {
 	Decimals      uint32                 `protobuf:"varint,3,opt,name=decimals,proto3" json:"decimals,omitempty"`                               // Token decimals (usually 18)
 	InitialSupply string                 `protobuf:"bytes,4,opt,name=initial_supply,json=initialSupply,proto3" json:"initial_supply,omitempty"` // Initial supply (as string to handle large numbers)
 	PrivateKey    string                 `protobuf:"bytes,5,opt,name=private_key,json=privateKey,proto3" json:"private_key,omitempty"`          // Private key for deployment (hex encoded, 64 characters, with or without 0x prefix)
+	ContractType  string                 `protobuf:"bytes,6,opt,name=contract_type,json=contractType,proto3" json:"contract_type,omitempty"`    // Contract type: "standard" or "ownable" (default: "standard")
+	UseAdmin      bool                   `protobuf:"varint,7,opt,name=use_admin,json=useAdmin,proto3" json:"use_admin,omitempty"`               // Use admin address as owner for ownable contract (default: false)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1304,6 +1322,20 @@ func (x *DeployERC20Request) GetPrivateKey() string {
 		return x.PrivateKey
 	}
 	return ""
+}
+
+func (x *DeployERC20Request) GetContractType() string {
+	if x != nil {
+		return x.ContractType
+	}
+	return ""
+}
+
+func (x *DeployERC20Request) GetUseAdmin() bool {
+	if x != nil {
+		return x.UseAdmin
+	}
+	return false
 }
 
 type DeployERC20Response struct {
@@ -1402,17 +1434,19 @@ var File_erc20_v1_erc20_proto protoreflect.FileDescriptor
 
 const file_erc20_v1_erc20_proto_rawDesc = "" +
 	"\n" +
-	"\x14erc20/v1/erc20.proto\x12\fapi.erc20.v1\x1a\x1cgoogle/api/annotations.proto\"h\n" +
+	"\x14erc20/v1/erc20.proto\x12\fapi.erc20.v1\x1a\x1cgoogle/api/annotations.proto\"\x8d\x01\n" +
 	"\x16GetERC20BalanceRequest\x12)\n" +
 	"\x10contract_address\x18\x01 \x01(\tR\x0fcontractAddress\x12#\n" +
-	"\rowner_address\x18\x02 \x01(\tR\fownerAddress\"\x9f\x01\n" +
+	"\rowner_address\x18\x02 \x01(\tR\fownerAddress\x12#\n" +
+	"\rcontract_type\x18\x03 \x01(\tR\fcontractType\"\x9f\x01\n" +
 	"\x17GetERC20BalanceResponse\x12\x18\n" +
 	"\abalance\x18\x01 \x01(\tR\abalance\x12)\n" +
 	"\x10contract_address\x18\x02 \x01(\tR\x0fcontractAddress\x12#\n" +
 	"\rowner_address\x18\x03 \x01(\tR\fownerAddress\x12\x1a\n" +
-	"\bdecimals\x18\x04 \x01(\rR\bdecimals\"@\n" +
+	"\bdecimals\x18\x04 \x01(\rR\bdecimals\"e\n" +
 	"\x13GetERC20InfoRequest\x12)\n" +
-	"\x10contract_address\x18\x01 \x01(\tR\x0fcontractAddress\"\xac\x01\n" +
+	"\x10contract_address\x18\x01 \x01(\tR\x0fcontractAddress\x12#\n" +
+	"\rcontract_type\x18\x02 \x01(\tR\fcontractType\"\xac\x01\n" +
 	"\x14GetERC20InfoResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12\x1a\n" +
@@ -1502,14 +1536,16 @@ const file_erc20_v1_erc20_proto_rawDesc = "" +
 	"\atx_hash\x18\x01 \x01(\tR\x06txHash\x12)\n" +
 	"\x10contract_address\x18\x02 \x01(\tR\x0fcontractAddress\x12!\n" +
 	"\ffrom_address\x18\x03 \x01(\tR\vfromAddress\x12\x16\n" +
-	"\x06amount\x18\x04 \x01(\tR\x06amount\"\xa4\x01\n" +
+	"\x06amount\x18\x04 \x01(\tR\x06amount\"\xe6\x01\n" +
 	"\x12DeployERC20Request\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x16\n" +
 	"\x06symbol\x18\x02 \x01(\tR\x06symbol\x12\x1a\n" +
 	"\bdecimals\x18\x03 \x01(\rR\bdecimals\x12%\n" +
 	"\x0einitial_supply\x18\x04 \x01(\tR\rinitialSupply\x12\x1f\n" +
 	"\vprivate_key\x18\x05 \x01(\tR\n" +
-	"privateKey\"\xf3\x01\n" +
+	"privateKey\x12#\n" +
+	"\rcontract_type\x18\x06 \x01(\tR\fcontractType\x12\x1b\n" +
+	"\tuse_admin\x18\a \x01(\bR\buseAdmin\"\xf3\x01\n" +
 	"\x13DeployERC20Response\x12\x17\n" +
 	"\atx_hash\x18\x01 \x01(\tR\x06txHash\x12)\n" +
 	"\x10contract_address\x18\x02 \x01(\tR\x0fcontractAddress\x12)\n" +

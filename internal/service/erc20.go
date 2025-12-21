@@ -11,7 +11,10 @@ import (
 	"eth-contract-service/internal/validator"
 	"eth-contract-service/provider/contract/erc20"
 	"eth-contract-service/provider/eth"
+	"eth-contract-service/provider/keystore"
 
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -59,10 +62,14 @@ func (s *ERC20Service) GetERC20Balance(ctx context.Context, req *pb.GetERC20Bala
 		return nil, errors.ToGRPCError(err)
 	}
 
-	// Create ERC20Token contract instance
-	token, err := s.contractClient.GetERC20Token(contractAddr)
+	// Get contract instance (supports both standard and ownable)
+	contractType := req.GetContractType()
+	if contractType == "" {
+		contractType = "standard"
+	}
+	token, err := s.getERC20Contract(contractAddr, contractType)
 	if err != nil {
-		s.logger.Errorf("failed to get ERC20 token: %v", err)
+		s.logger.Errorf("failed to get ERC20 contract: %v", err)
 		return nil, errors.ToGRPCError(err)
 	}
 
@@ -107,10 +114,14 @@ func (s *ERC20Service) GetERC20Info(ctx context.Context, req *pb.GetERC20InfoReq
 		return nil, errors.ToGRPCError(err)
 	}
 
-	// Create ERC20Token contract instance
-	token, err := s.contractClient.GetERC20Token(contractAddr)
+	// Get contract instance (supports both standard and ownable)
+	contractType := req.GetContractType()
+	if contractType == "" {
+		contractType = "standard"
+	}
+	token, err := s.getERC20Contract(contractAddr, contractType)
 	if err != nil {
-		s.logger.Errorf("failed to get ERC20 token: %v", err)
+		s.logger.Errorf("failed to get ERC20 contract: %v", err)
 		return nil, errors.ToGRPCError(err)
 	}
 
@@ -692,19 +703,49 @@ func (s *ERC20Service) DeployERC20(ctx context.Context, req *pb.DeployERC20Reque
 		return nil, errors.ToGRPCError(errors.ErrClientNotInitialized)
 	}
 
-	// Deploy contract
-	contractAddr, tx, _, err := erc20.DeployERC20Token(
-		auth,
-		client,
-		req.Name,
-		req.Symbol,
-		uint8(req.Decimals),
-		initialSupply,
-		deployerAddr,
-	)
+	// Determine contract type and owner address
+	contractType := getContractType(req.GetContractType())
+	ownerAddr := deployerAddr
+
+	// For ownable contracts, use admin address as owner if requested
+	if contractType == contract.ContractTypeOwnable && req.GetUseAdmin() {
+		adminAddr := keystore.GetAdminAddress()
+		if adminAddr == (common.Address{}) {
+			return nil, errors.ToGRPCError(errors.InvalidArgument("admin keystore not initialized, cannot use admin address"))
+		}
+		ownerAddr = adminAddr
+		s.logger.Infof("using admin address as owner: %s", ownerAddr.Hex())
+	}
+
+	// Deploy contract based on type
+	var contractAddr common.Address
+	var tx *types.Transaction
+
+	if contractType == contract.ContractTypeOwnable {
+		contractAddr, tx, _, err = erc20.DeployERC20TokenOwnable(
+			auth,
+			client,
+			req.Name,
+			req.Symbol,
+			uint8(req.Decimals),
+			initialSupply,
+			ownerAddr,
+		)
+	} else {
+		contractAddr, tx, _, err = erc20.DeployERC20Token(
+			auth,
+			client,
+			req.Name,
+			req.Symbol,
+			uint8(req.Decimals),
+			initialSupply,
+			ownerAddr,
+		)
+	}
+
 	if err != nil {
-		s.logger.Errorf("failed to deploy ERC20 contract: name=%s, symbol=%s, decimals=%d, error=%v",
-			req.Name, req.Symbol, req.Decimals, err)
+		s.logger.Errorf("failed to deploy ERC20 contract: type=%s, name=%s, symbol=%s, decimals=%d, error=%v",
+			contractType, req.Name, req.Symbol, req.Decimals, err)
 		return nil, errors.ToGRPCError(errors.WrapError(err, errors.CodeInternal, "failed to deploy ERC20 contract"))
 	}
 

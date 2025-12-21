@@ -95,6 +95,7 @@ service ERC20 {
 message GetERC20BalanceRequest {
   string contract_address = 1; // ERC20 contract address
   string owner_address = 2;    // Address to query balance for
+  string contract_type = 3;    // Contract type: "standard" or "ownable" (default: "standard")
 }
 
 message GetERC20BalanceResponse {
@@ -106,6 +107,7 @@ message GetERC20BalanceResponse {
 
 message GetERC20InfoRequest {
   string contract_address = 1; // ERC20 contract address
+  string contract_type = 2;     // Contract type: "standard" or "ownable" (default: "standard")
 }
 
 message GetERC20InfoResponse {
@@ -222,6 +224,8 @@ message DeployERC20Request {
   uint32 decimals = 3;         // Token decimals (usually 18)
   string initial_supply = 4;   // Initial supply (as string to handle large numbers)
   string private_key = 5;      // Private key for deployment (hex encoded, 64 characters, with or without 0x prefix)
+  string contract_type = 6;    // Contract type: "standard" or "ownable" (default: "standard")
+  bool use_admin = 7;          // Use admin address as owner for ownable contract (default: false)
 }
 
 message DeployERC20Response {

@@ -67,6 +67,10 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: contractType
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -139,6 +143,10 @@ paths:
             operationId: ERC20_GetERC20Info
             parameters:
                 - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: contractType
                   in: query
                   schema:
                     type: string
@@ -288,6 +296,10 @@ components:
                     type: string
                 privateKey:
                     type: string
+                contractType:
+                    type: string
+                useAdmin:
+                    type: boolean
         api.erc20.v1.DeployERC20Response:
             type: object
             properties:

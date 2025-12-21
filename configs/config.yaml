@@ -31,3 +31,11 @@ log:
   level: -1
   # Format: json or console
   format: console
+
+admin:
+  # Path to keystore v3 file
+  keystore_path: ${ADMIN_KEYSTORE_PATH:./keystore/admin.json}
+  # Password for keystore file
+  keystore_password: ${ADMIN_KEYSTORE_PASSWORD:}
+  # Admin address (optional, will be derived from keystore if not provided)
+  address: ${ADMIN_ADDRESS:}

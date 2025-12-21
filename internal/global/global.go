@@ -9,6 +9,7 @@ import (
 	"eth-contract-service/provider/cache"
 	"eth-contract-service/provider/db"
 	"eth-contract-service/provider/eth"
+	"eth-contract-service/provider/keystore"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -57,5 +58,17 @@ func Init(bc *conf.Bootstrap, logger log.Logger) {
 		}
 	} else {
 		Logger.Warnf("ethereum configuration not found, skipping initialization")
+	}
+
+	// Initialize admin keystore if configured
+	if bc.GetAdmin() != nil {
+		err = keystore.Init(context.Background(), bc.GetAdmin(), logger)
+		if err != nil {
+			Logger.Warnf("admin keystore initialization failed: %v", err)
+		} else {
+			Logger.Infof("admin keystore initialized: address=%s", keystore.GetAdminAddress().Hex())
+		}
+	} else {
+		Logger.Warnf("admin configuration not found, skipping keystore initialization")
 	}
 }

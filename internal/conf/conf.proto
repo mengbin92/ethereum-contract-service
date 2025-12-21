@@ -10,6 +10,7 @@ message Bootstrap {
   Data data = 2;
   Log log = 3;
   Ethereum ethereum = 4;
+  Admin admin = 5; // Admin configuration
 }
 
 message Server {
@@ -60,4 +61,11 @@ message Ethereum {
   int32 max_retries = 4; // Maximum retry attempts for failed requests
   map<string, string> contracts =
       5; // Contract addresses map, e.g., erc20: 0xXXXXX
+}
+
+message Admin {
+  string keystore_path = 1;     // Path to keystore v3 file
+  string keystore_password = 2; // Password for keystore file
+  string address = 3; // Admin address (optional, will be derived from keystore
+                      // if not provided)
 }
