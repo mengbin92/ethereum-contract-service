@@ -1,0 +1,419 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ERC20 API
+    description: ERC20 service provides ERC20 token interaction endpoints
+    version: 0.0.1
+paths:
+    /api/v1/erc20/allowance:
+        get:
+            tags:
+                - ERC20
+            description: GetERC20Allowance returns the amount of tokens that the spender is allowed to spend
+            operationId: ERC20_GetERC20Allowance
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: ownerAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: spenderAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.GetERC20AllowanceResponse'
+    /api/v1/erc20/approve:
+        post:
+            tags:
+                - ERC20
+            description: ApproveERC20 approves the spender to spend ERC20 tokens
+            operationId: ERC20_ApproveERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.ApproveERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.ApproveERC20Response'
+    /api/v1/erc20/balance:
+        get:
+            tags:
+                - ERC20
+            description: GetERC20Balance returns the ERC20 token balance of the specified address
+            operationId: ERC20_GetERC20Balance
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: ownerAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.GetERC20BalanceResponse'
+    /api/v1/erc20/burn:
+        post:
+            tags:
+                - ERC20
+            description: BurnERC20 burns ERC20 tokens from the caller's balance
+            operationId: ERC20_BurnERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.BurnERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.BurnERC20Response'
+    /api/v1/erc20/burn-from:
+        post:
+            tags:
+                - ERC20
+            description: BurnFromERC20 burns ERC20 tokens from a specified address (requires approval)
+            operationId: ERC20_BurnFromERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.BurnFromERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.BurnFromERC20Response'
+    /api/v1/erc20/deploy:
+        post:
+            tags:
+                - ERC20
+            description: DeployERC20 deploys a new ERC20 token contract
+            operationId: ERC20_DeployERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.DeployERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.DeployERC20Response'
+    /api/v1/erc20/info:
+        get:
+            tags:
+                - ERC20
+            description: GetERC20Info returns ERC20 token information (name, symbol, decimals, total supply)
+            operationId: ERC20_GetERC20Info
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.GetERC20InfoResponse'
+    /api/v1/erc20/mint:
+        post:
+            tags:
+                - ERC20
+            description: MintERC20 mints new ERC20 tokens (only for contracts with mint function)
+            operationId: ERC20_MintERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.MintERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.MintERC20Response'
+    /api/v1/erc20/transfer:
+        post:
+            tags:
+                - ERC20
+            description: TransferERC20 transfers ERC20 tokens from the caller to the specified address
+            operationId: ERC20_TransferERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.TransferERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.TransferERC20Response'
+    /api/v1/erc20/transfer-from:
+        post:
+            tags:
+                - ERC20
+            description: TransferFromERC20 transfers ERC20 tokens from one address to another (requires approval)
+            operationId: ERC20_TransferFromERC20
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc20.v1.TransferFromERC20Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc20.v1.TransferFromERC20Response'
+components:
+    schemas:
+        api.erc20.v1.ApproveERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                spenderAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.ApproveERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                spenderAddress:
+                    type: string
+                amount:
+                    type: string
+        api.erc20.v1.BurnERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.BurnERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                amount:
+                    type: string
+        api.erc20.v1.BurnFromERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.BurnFromERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                amount:
+                    type: string
+        api.erc20.v1.DeployERC20Request:
+            type: object
+            properties:
+                name:
+                    type: string
+                symbol:
+                    type: string
+                decimals:
+                    type: integer
+                    format: uint32
+                initialSupply:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.DeployERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                deployerAddress:
+                    type: string
+                name:
+                    type: string
+                symbol:
+                    type: string
+                decimals:
+                    type: integer
+                    format: uint32
+                initialSupply:
+                    type: string
+        api.erc20.v1.GetERC20AllowanceResponse:
+            type: object
+            properties:
+                allowance:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                spenderAddress:
+                    type: string
+        api.erc20.v1.GetERC20BalanceResponse:
+            type: object
+            properties:
+                balance:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                decimals:
+                    type: integer
+                    format: uint32
+        api.erc20.v1.GetERC20InfoResponse:
+            type: object
+            properties:
+                name:
+                    type: string
+                symbol:
+                    type: string
+                decimals:
+                    type: integer
+                    format: uint32
+                totalSupply:
+                    type: string
+                contractAddress:
+                    type: string
+        api.erc20.v1.MintERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.MintERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+        api.erc20.v1.TransferERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.TransferERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+        api.erc20.v1.TransferFromERC20Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc20.v1.TransferFromERC20Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                amount:
+                    type: string
+tags:
+    - name: ERC20

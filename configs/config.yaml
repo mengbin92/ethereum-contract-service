@@ -1,0 +1,33 @@
+server:
+  http:
+    addr: 0.0.0.0:${HTTP_PORT:8000}
+    timeout: 30s
+  grpc:
+    addr: 0.0.0.0:${GRPC_PORT:9000}
+    timeout: 30s
+
+data:
+  database:
+    driver: mysql
+    source: ${DB_USER:root}:${DB_PASSWORD:jKBrZHGcsNG5fMc52EWz}@tcp(${DB_HOST:localhost}:${DB_PORT:3306})/${DB_NAME:eth_contract_service}?charset=utf8mb4&parseTime=True&loc=Local
+  redis:
+    addr: ${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    db: ${REDIS_DB:0}
+    pool_size: 100
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+
+ethereum:
+  rpc_url: ${ETH_RPC_URL:http://localhost:8545}
+  chain_id: ${ETH_CHAIN_ID:1337} # 1 for mainnet, 5 for goerli, 11155111 for sepolia
+  timeout: 30s
+  max_retries: 3
+  contracts:
+    erc20: ${ERC20_CONTRACT_ADDRESS:0x0000000000000000000000000000000000000000}
+
+log:
+  # Log levels: debug(-1), info(0), warn(1), error(2), dpanic(3), panic(4), fatal(5)
+  level: -1
+  # Format: json or console
+  format: console

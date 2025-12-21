@@ -1,0 +1,105 @@
+services:
+  app:
+    build: .
+    # Ports are exposed internally to nginx, not directly to host
+    expose:
+      - "8000"  # HTTP API
+      - "9000"  # gRPC
+    volumes:
+      - ./configs:/data/conf
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    # Environment variables can be set via .env file or environment
+    # To create .env file, run: cp .env.example .env
+    # Or manually create .env with required variables
+    env_file:
+      - .env
+    networks:
+      - eth-contract-service-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: eth-contract-service-nginx
+    restart: unless-stopped
+    ports:
+      - 80:80      # HTTP API (with CORS)
+      - 9090:9090  # gRPC (HTTP/2)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - eth-contract-service-network
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  envoy:
+    image: envoyproxy/envoy:v1.36-latest
+    container_name: eth-contract-service-envoy
+    restart: unless-stopped
+    ports:
+      - 9001:9001  # grpc-web 端口
+      - 9901:9901  # Envoy admin 端口
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro
+    networks:
+      - eth-contract-service-network
+    depends_on:
+      - app
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml --service-cluster envoy --service-node envoy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:9901/server_info || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  mysql:
+    image: mysql:8.0
+    container_name: eth-contract-service-mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=jKBrZHGcsNG5fMc52EWz
+      - MYSQL_DATABASE=eth_contract_service
+      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eth-contract-service-network
+
+  redis:
+    image: redis:latest
+    container_name: eth-contract-service-redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eth-contract-service-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  eth-contract-service-network:
+    driver: bridge

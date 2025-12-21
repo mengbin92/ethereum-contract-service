@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package api.erc20.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "eth-contract-service/api/erc20/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.erc20.v1";
+
+// ERC20 service provides ERC20 token interaction endpoints
+service ERC20 {
+  // ERC20 Token Operations
+  
+  // GetERC20Balance returns the ERC20 token balance of the specified address
+  rpc GetERC20Balance(GetERC20BalanceRequest) returns (GetERC20BalanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc20/balance"
+    };
+  }
+
+  // GetERC20Info returns ERC20 token information (name, symbol, decimals, total supply)
+  rpc GetERC20Info(GetERC20InfoRequest) returns (GetERC20InfoResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc20/info"
+    };
+  }
+
+  // TransferERC20 transfers ERC20 tokens from the caller to the specified address
+  rpc TransferERC20(TransferERC20Request) returns (TransferERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/transfer"
+      body: "*"
+    };
+  }
+
+  // ApproveERC20 approves the spender to spend ERC20 tokens
+  rpc ApproveERC20(ApproveERC20Request) returns (ApproveERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/approve"
+      body: "*"
+    };
+  }
+
+  // GetERC20Allowance returns the amount of tokens that the spender is allowed to spend
+  rpc GetERC20Allowance(GetERC20AllowanceRequest) returns (GetERC20AllowanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc20/allowance"
+    };
+  }
+
+  // TransferFromERC20 transfers ERC20 tokens from one address to another (requires approval)
+  rpc TransferFromERC20(TransferFromERC20Request) returns (TransferFromERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/transfer-from"
+      body: "*"
+    };
+  }
+
+  // MintERC20 mints new ERC20 tokens (only for contracts with mint function)
+  rpc MintERC20(MintERC20Request) returns (MintERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/mint"
+      body: "*"
+    };
+  }
+
+  // BurnERC20 burns ERC20 tokens from the caller's balance
+  rpc BurnERC20(BurnERC20Request) returns (BurnERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/burn"
+      body: "*"
+    };
+  }
+
+  // BurnFromERC20 burns ERC20 tokens from a specified address (requires approval)
+  rpc BurnFromERC20(BurnFromERC20Request) returns (BurnFromERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/burn-from"
+      body: "*"
+    };
+  }
+
+  // DeployERC20 deploys a new ERC20 token contract
+  rpc DeployERC20(DeployERC20Request) returns (DeployERC20Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc20/deploy"
+      body: "*"
+    };
+  }
+}
+
+// ERC20 Request/Response Messages
+
+message GetERC20BalanceRequest {
+  string contract_address = 1; // ERC20 contract address
+  string owner_address = 2;    // Address to query balance for
+}
+
+message GetERC20BalanceResponse {
+  string balance = 1;           // Token balance (as string to handle large numbers)
+  string contract_address = 2;  // Contract address
+  string owner_address = 3;     // Owner address
+  uint32 decimals = 4;          // Token decimals
+}
+
+message GetERC20InfoRequest {
+  string contract_address = 1; // ERC20 contract address
+}
+
+message GetERC20InfoResponse {
+  string name = 1;              // Token name
+  string symbol = 2;            // Token symbol
+  uint32 decimals = 3;         // Token decimals
+  string total_supply = 4;      // Total supply (as string to handle large numbers)
+  string contract_address = 5;  // Contract address
+}
+
+message TransferERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string to_address = 2;       // Recipient address
+  string amount = 3;           // Amount to transfer (as string to handle large numbers)
+  string private_key = 4;      // Private key (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message TransferERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string from_address = 3;     // Sender address
+  string to_address = 4;       // Recipient address
+  string amount = 5;           // Amount transferred
+}
+
+message ApproveERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string spender_address = 2;  // Spender address
+  string amount = 3;           // Amount to approve (as string to handle large numbers)
+  string private_key = 4;      // Private key (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message ApproveERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string owner_address = 3;     // Owner address
+  string spender_address = 4;    // Spender address
+  string amount = 5;           // Approved amount
+}
+
+message GetERC20AllowanceRequest {
+  string contract_address = 1; // ERC20 contract address
+  string owner_address = 2;    // Owner address
+  string spender_address = 3;   // Spender address
+}
+
+message GetERC20AllowanceResponse {
+  string allowance = 1;        // Allowed amount (as string to handle large numbers)
+  string contract_address = 2;  // Contract address
+  string owner_address = 3;     // Owner address
+  string spender_address = 4;    // Spender address
+}
+
+message TransferFromERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string from_address = 2;     // Address to transfer from
+  string to_address = 3;       // Recipient address
+  string amount = 4;           // Amount to transfer (as string to handle large numbers)
+  string private_key = 5;      // Private key of the spender (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message TransferFromERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string from_address = 3;     // Address transferred from
+  string to_address = 4;       // Recipient address
+  string amount = 5;           // Amount transferred
+}
+
+message MintERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string to_address = 2;       // Address to mint tokens to
+  string amount = 3;           // Amount to mint (as string to handle large numbers)
+  string private_key = 4;      // Private key (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message MintERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string to_address = 3;       // Address that received minted tokens
+  string amount = 4;           // Amount minted
+}
+
+message BurnERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string amount = 2;           // Amount to burn (as string to handle large numbers)
+  string private_key = 3;      // Private key (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message BurnERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string from_address = 3;     // Address that burned tokens
+  string amount = 4;           // Amount burned
+}
+
+message BurnFromERC20Request {
+  string contract_address = 1; // ERC20 contract address
+  string from_address = 2;     // Address to burn tokens from
+  string amount = 3;           // Amount to burn (as string to handle large numbers)
+  string private_key = 4;      // Private key of the spender (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message BurnFromERC20Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2;  // Contract address
+  string from_address = 3;     // Address that tokens were burned from
+  string amount = 4;           // Amount burned
+}
+
+message DeployERC20Request {
+  string name = 1;             // Token name (e.g., "My Token")
+  string symbol = 2;           // Token symbol (e.g., "MTK")
+  uint32 decimals = 3;         // Token decimals (usually 18)
+  string initial_supply = 4;   // Initial supply (as string to handle large numbers)
+  string private_key = 5;      // Private key for deployment (hex encoded, 64 characters, with or without 0x prefix)
+}
+
+message DeployERC20Response {
+  string tx_hash = 1;          // Deployment transaction hash
+  string contract_address = 2;  // Deployed contract address
+  string deployer_address = 3; // Address that deployed the contract
+  string name = 4;             // Token name
+  string symbol = 5;           // Token symbol
+  uint32 decimals = 6;          // Token decimals
+  string initial_supply = 7;   // Initial supply
+}
+
