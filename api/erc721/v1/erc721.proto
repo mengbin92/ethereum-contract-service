@@ -1,0 +1,309 @@
+syntax = "proto3";
+
+package api.erc721.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "eth-contract-service/api/erc721/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.erc721.v1";
+
+// ERC721 service provides ERC721 (NFT) token interaction endpoints
+service ERC721 {
+  // ERC721 Token Operations
+
+  // GetERC721Balance returns the ERC721 token balance (number of NFTs) of the specified address
+  rpc GetERC721Balance(GetERC721BalanceRequest) returns (GetERC721BalanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/balance"
+    };
+  }
+
+  // GetERC721TokenInfo returns ERC721 token information (name, symbol)
+  rpc GetERC721TokenInfo(GetERC721TokenInfoRequest) returns (GetERC721TokenInfoResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/info"
+    };
+  }
+
+  // GetERC721TokenURI returns the URI for a specific token
+  rpc GetERC721TokenURI(GetERC721TokenURIRequest) returns (GetERC721TokenURIResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/token-uri"
+    };
+  }
+
+  // GetERC721OwnerOf returns the owner of a specific token
+  rpc GetERC721OwnerOf(GetERC721OwnerOfRequest) returns (GetERC721OwnerOfResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/owner-of"
+    };
+  }
+
+  // GetERC721Approved returns the approved address for a token
+  rpc GetERC721Approved(GetERC721ApprovedRequest) returns (GetERC721ApprovedResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/approved"
+    };
+  }
+
+  // IsApprovedForAllERC721 checks if an operator is approved for all tokens of an owner
+  rpc IsApprovedForAllERC721(IsApprovedForAllERC721Request) returns (IsApprovedForAllERC721Response) {
+    option (google.api.http) = {
+      get: "/api/v1/erc721/is-approved-for-all"
+    };
+  }
+
+  // TransferERC721 transfers an ERC721 token from the caller to the specified address
+  rpc TransferERC721(TransferERC721Request) returns (TransferERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/transfer"
+      body: "*"
+    };
+  }
+
+  // SafeTransferERC721 safely transfers an ERC721 token (calls onERC721Received on recipient)
+  rpc SafeTransferERC721(SafeTransferERC721Request) returns (SafeTransferERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/safe-transfer"
+      body: "*"
+    };
+  }
+
+  // SafeTransferERC721WithData safely transfers an ERC721 token with additional data
+  rpc SafeTransferERC721WithData(SafeTransferERC721WithDataRequest) returns (SafeTransferERC721WithDataResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/safe-transfer-with-data"
+      body: "*"
+    };
+  }
+
+  // ApproveERC721 approves another address to transfer the specified token
+  rpc ApproveERC721(ApproveERC721Request) returns (ApproveERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/approve"
+      body: "*"
+    };
+  }
+
+  // SetApprovalForAllERC721 enables or disables approval for a third party ("operator") to manage all tokens
+  rpc SetApprovalForAllERC721(SetApprovalForAllERC721Request) returns (SetApprovalForAllERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/set-approval-for-all"
+      body: "*"
+    };
+  }
+
+  // SafeMintERC721 safely mints a new ERC721 token
+  rpc SafeMintERC721(SafeMintERC721Request) returns (SafeMintERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/safe-mint"
+      body: "*"
+    };
+  }
+
+  // BurnERC721 burns an ERC721 token
+  rpc BurnERC721(BurnERC721Request) returns (BurnERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/burn"
+      body: "*"
+    };
+  }
+
+  // DeployERC721 deploys a new ERC721 token contract
+  rpc DeployERC721(DeployERC721Request) returns (DeployERC721Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc721/deploy"
+      body: "*"
+    };
+  }
+}
+
+// ERC721 Request/Response Messages
+
+message GetERC721BalanceRequest {
+  string contract_address = 1; // ERC721 contract address
+  string owner_address = 2;    // Address to query balance for
+}
+
+message GetERC721BalanceResponse {
+  string balance = 1;          // Number of NFTs owned
+  string contract_address = 2; // Contract address
+  string owner_address = 3;    // Owner address
+}
+
+message GetERC721TokenInfoRequest {
+  string contract_address = 1; // ERC721 contract address
+}
+
+message GetERC721TokenInfoResponse {
+  string name = 1;             // Token name
+  string symbol = 2;           // Token symbol
+  string contract_address = 3; // Contract address
+}
+
+message GetERC721TokenURIRequest {
+  string contract_address = 1; // ERC721 contract address
+  string token_id = 2;         // Token ID (as string to handle large numbers)
+}
+
+message GetERC721TokenURIResponse {
+  string token_uri = 1;        // Token URI (metadata)
+  string contract_address = 2; // Contract address
+  string token_id = 3;         // Token ID
+}
+
+message GetERC721OwnerOfRequest {
+  string contract_address = 1; // ERC721 contract address
+  string token_id = 2;         // Token ID (as string to handle large numbers)
+}
+
+message GetERC721OwnerOfResponse {
+  string owner_address = 1;    // Owner address
+  string contract_address = 2; // Contract address
+  string token_id = 3;         // Token ID
+}
+
+message GetERC721ApprovedRequest {
+  string contract_address = 1; // ERC721 contract address
+  string token_id = 2;         // Token ID (as string to handle large numbers)
+}
+
+message GetERC721ApprovedResponse {
+  string approved_address = 1; // Approved address (or zero address if none)
+  string contract_address = 2; // Contract address
+  string token_id = 3;         // Token ID
+}
+
+message IsApprovedForAllERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string owner_address = 2;    // Owner address
+  string operator_address = 3; // Operator address
+}
+
+message IsApprovedForAllERC721Response {
+  bool approved = 1;           // Whether operator is approved for all tokens
+  string contract_address = 2; // Contract address
+  string owner_address = 3;    // Owner address
+  string operator_address = 4; // Operator address
+}
+
+message TransferERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string from_address = 2;     // Current owner address (must match private key)
+  string to_address = 3;       // Recipient address
+  string token_id = 4;         // Token ID to transfer (as string)
+  string private_key = 5;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message TransferERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string from_address = 3;     // From address
+  string to_address = 4;       // To address
+  string token_id = 5;         // Token ID
+}
+
+message SafeTransferERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string from_address = 2;     // Current owner address (must match private key)
+  string to_address = 3;       // Recipient address
+  string token_id = 4;         // Token ID to transfer (as string)
+  string private_key = 5;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SafeTransferERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string from_address = 3;     // From address
+  string to_address = 4;       // To address
+  string token_id = 5;         // Token ID
+}
+
+message SafeTransferERC721WithDataRequest {
+  string contract_address = 1; // ERC721 contract address
+  string from_address = 2;     // Current owner address (must match private key)
+  string to_address = 3;       // Recipient address
+  string token_id = 4;         // Token ID to transfer (as string)
+  bytes data = 5;              // Additional data to send with transfer
+  string private_key = 6;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SafeTransferERC721WithDataResponse {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string from_address = 3;     // From address
+  string to_address = 4;       // To address
+  string token_id = 5;         // Token ID
+}
+
+message ApproveERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string approved_address = 2; // Address to approve
+  string token_id = 3;         // Token ID to approve
+  string private_key = 4;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message ApproveERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string owner_address = 3;    // Owner address
+  string approved_address = 4; // Approved address
+  string token_id = 5;         // Token ID
+}
+
+message SetApprovalForAllERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string operator_address = 2; // Operator address
+  bool approved = 3;           // Whether to approve or revoke approval
+  string private_key = 4;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SetApprovalForAllERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string owner_address = 3;    // Owner address
+  string operator_address = 4; // Operator address
+  bool approved = 5;           // Approval status set
+}
+
+message SafeMintERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string to_address = 2;       // Address to mint token to
+  string token_id = 3;         // Token ID to mint (as string)
+  string private_key = 4;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SafeMintERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string to_address = 3;       // Address that received minted token
+  string token_id = 4;         // Token ID minted
+}
+
+message BurnERC721Request {
+  string contract_address = 1; // ERC721 contract address
+  string token_id = 2;         // Token ID to burn (as string)
+  string private_key = 3;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message BurnERC721Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string token_id = 3;         // Token ID burned
+}
+
+message DeployERC721Request {
+  string name = 1;              // Token name
+  string symbol = 2;            // Token symbol
+  string private_key = 3;       // Private key of the deployer
+  string initial_owner = 4;     // Initial owner address (optional, defaults to deployer)
+}
+
+message DeployERC721Response {
+  string tx_hash = 1;           // Transaction hash
+  string contract_address = 2;  // Deployed contract address
+  string deployer_address = 3;  // Deployer address
+  string name = 4;              // Token name
+  string symbol = 5;            // Token symbol
+}

@@ -1,0 +1,294 @@
+syntax = "proto3";
+
+package api.erc1155.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "eth-contract-service/api/erc1155/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.erc1155.v1";
+
+// ERC1155 service provides ERC1155 (Multi-Token) token interaction endpoints
+service ERC1155 {
+  // ERC1155 Token Operations
+
+  // GetERC1155Balance returns the balance of an address for a specific token ID
+  rpc GetERC1155Balance(GetERC1155BalanceRequest) returns (GetERC1155BalanceResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc1155/balance"
+    };
+  }
+
+  // GetERC1155BalancesBatch returns the balance of multiple addresses for multiple token IDs
+  rpc GetERC1155BalancesBatch(GetERC1155BalancesBatchRequest) returns (GetERC1155BalancesBatchResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc1155/balance-batch"
+    };
+  }
+
+  // GetERC1155TokenURI returns the URI for a specific token ID
+  rpc GetERC1155TokenURI(GetERC1155TokenURIRequest) returns (GetERC1155TokenURIResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/erc1155/token-uri"
+    };
+  }
+
+  // IsApprovedForAllERC1155 checks if an operator is approved for all tokens of an owner
+  rpc IsApprovedForAllERC1155(IsApprovedForAllERC1155Request) returns (IsApprovedForAllERC1155Response) {
+    option (google.api.http) = {
+      get: "/api/v1/erc1155/is-approved-for-all"
+    };
+  }
+
+  // SafeTransferERC1155 transfers an ERC1155 token from one address to another
+  rpc SafeTransferERC1155(SafeTransferERC1155Request) returns (SafeTransferERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/safe-transfer"
+      body: "*"
+    };
+  }
+
+  // SafeBatchTransferERC1155 safely transfers multiple ERC1155 tokens
+  rpc SafeBatchTransferERC1155(SafeBatchTransferERC1155Request) returns (SafeBatchTransferERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/safe-batch-transfer"
+      body: "*"
+    };
+  }
+
+  // SetApprovalForAllERC1155 enables or disables approval for a third party ("operator") to manage all tokens
+  rpc SetApprovalForAllERC1155(SetApprovalForAllERC1155Request) returns (SetApprovalForAllERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/set-approval-for-all"
+      body: "*"
+    };
+  }
+
+  // MintERC1155 mints new ERC1155 tokens
+  rpc MintERC1155(MintERC1155Request) returns (MintERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/mint"
+      body: "*"
+    };
+  }
+
+  // MintBatchERC1155 mints multiple ERC1155 tokens
+  rpc MintBatchERC1155(MintBatchERC1155Request) returns (MintBatchERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/mint-batch"
+      body: "*"
+    };
+  }
+
+  // BurnERC1155 burns ERC1155 tokens
+  rpc BurnERC1155(BurnERC1155Request) returns (BurnERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/burn"
+      body: "*"
+    };
+  }
+
+  // BurnBatchERC1155 burns multiple ERC1155 tokens
+  rpc BurnBatchERC1155(BurnBatchERC1155Request) returns (BurnBatchERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/burn-batch"
+      body: "*"
+    };
+  }
+
+  // DeployERC1155 deploys a new ERC1155 token contract
+  rpc DeployERC1155(DeployERC1155Request) returns (DeployERC1155Response) {
+    option (google.api.http) = {
+      post: "/api/v1/erc1155/deploy"
+      body: "*"
+    };
+  }
+}
+
+// ERC1155 Request/Response Messages
+
+message GetERC1155BalanceRequest {
+  string contract_address = 1; // ERC1155 contract address
+  string account_address = 2;  // Account address to query balance for
+  string token_id = 3;         // Token ID (as string to handle large numbers)
+}
+
+message GetERC1155BalanceResponse {
+  string balance = 1;          // Token balance (as string to handle large numbers)
+  string contract_address = 2; // Contract address
+  string account_address = 3;  // Account address
+  string token_id = 4;         // Token ID
+}
+
+message GetERC1155BalancesBatchRequest {
+  string contract_address = 1; // ERC1155 contract address
+  repeated string accounts = 2; // List of account addresses
+  repeated string token_ids = 3; // List of token IDs (as string)
+}
+
+message GetERC1155BalancesBatchResponse {
+  repeated string balances = 1; // List of balances (as string)
+  string contract_address = 2;  // Contract address
+  repeated string accounts = 3; // Account addresses
+  repeated string token_ids = 4; // Token IDs
+}
+
+message GetERC1155TokenURIRequest {
+  string contract_address = 1; // ERC1155 contract address
+  string token_id = 2;         // Token ID (as string to handle large numbers)
+}
+
+message GetERC1155TokenURIResponse {
+  string token_uri = 1;        // Token URI (metadata)
+  string contract_address = 2; // Contract address
+  string token_id = 3;         // Token ID
+}
+
+message IsApprovedForAllERC1155Request {
+  string contract_address = 1; // ERC1155 contract address
+  string account_address = 2;  // Account/Owner address
+  string operator_address = 3; // Operator address
+}
+
+message IsApprovedForAllERC1155Response {
+  bool approved = 1;           // Whether operator is approved for all tokens
+  string contract_address = 2; // Contract address
+  string account_address = 3;  // Account/Owner address
+  string operator_address = 4; // Operator address
+}
+
+message SafeTransferERC1155Request {
+  string contract_address = 1; // ERC1155 contract address
+  string from_address = 2;     // Current owner address (must match private key)
+  string to_address = 3;       // Recipient address
+  string token_id = 4;         // Token ID (as string)
+  string amount = 5;           // Amount to transfer (as string)
+  bytes data = 6;              // Additional data (can be empty)
+  string private_key = 7;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SafeTransferERC1155Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string from_address = 3;     // From address
+  string to_address = 4;       // To address
+  string token_id = 5;         // Token ID
+  string amount = 6;           // Amount transferred
+}
+
+message SafeBatchTransferERC1155Request {
+  string contract_address = 1;      // ERC1155 contract address
+  string from_address = 2;          // Current owner address (must match private key)
+  string to_address = 3;            // Recipient address
+  repeated string token_ids = 4;    // List of token IDs (as string)
+  repeated string amounts = 5;      // List of amounts (as string)
+  bytes data = 6;                   // Additional data (can be empty)
+  string private_key = 7;           // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SafeBatchTransferERC1155Response {
+  string tx_hash = 1;              // Transaction hash
+  string contract_address = 2;     // Contract address
+  string from_address = 3;         // From address
+  string to_address = 4;           // To address
+  repeated string token_ids = 5;   // Token IDs
+  repeated string amounts = 6;     // Amounts transferred
+}
+
+message SetApprovalForAllERC1155Request {
+  string contract_address = 1; // ERC1155 contract address
+  string operator_address = 2; // Operator address
+  bool approved = 3;           // Whether to approve or revoke approval
+  string private_key = 4;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message SetApprovalForAllERC1155Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string owner_address = 3;    // Owner address
+  string operator_address = 4; // Operator address
+  bool approved = 5;           // Approval status set
+}
+
+message MintERC1155Request {
+  string contract_address = 1; // ERC1155 contract address
+  string to_address = 2;       // Address to mint tokens to
+  string token_id = 3;         // Token ID (as string)
+  string amount = 4;           // Amount to mint (as string)
+  bytes data = 5;              // Additional data (can be empty)
+  string private_key = 6;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message MintERC1155Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string to_address = 3;       // Address that received minted tokens
+  string token_id = 4;         // Token ID
+  string amount = 5;           // Amount minted
+}
+
+message MintBatchERC1155Request {
+  string contract_address = 1;      // ERC1155 contract address
+  string to_address = 2;            // Address to mint tokens to
+  repeated string token_ids = 3;    // List of token IDs (as string)
+  repeated string amounts = 4;      // List of amounts (as string)
+  bytes data = 5;                   // Additional data (can be empty)
+  string private_key = 6;           // Private key (hex encoded, with or without 0x prefix)
+}
+
+message MintBatchERC1155Response {
+  string tx_hash = 1;              // Transaction hash
+  string contract_address = 2;     // Contract address
+  string to_address = 3;           // Address that received minted tokens
+  repeated string token_ids = 4;   // Token IDs
+  repeated string amounts = 5;     // Amounts minted
+}
+
+message BurnERC1155Request {
+  string contract_address = 1; // ERC1155 contract address
+  string account_address = 2;  // Account address to burn from (must match private key)
+  string token_id = 3;         // Token ID (as string)
+  string amount = 4;           // Amount to burn (as string)
+  string private_key = 5;      // Private key (hex encoded, with or without 0x prefix)
+}
+
+message BurnERC1155Response {
+  string tx_hash = 1;          // Transaction hash
+  string contract_address = 2; // Contract address
+  string account_address = 3;  // Account address
+  string token_id = 4;         // Token ID
+  string amount = 5;           // Amount burned
+}
+
+message BurnBatchERC1155Request {
+  string contract_address = 1;      // ERC1155 contract address
+  string account_address = 2;       // Account address to burn from (must match private key)
+  repeated string token_ids = 3;    // List of token IDs (as string)
+  repeated string amounts = 4;      // List of amounts (as string)
+  string private_key = 5;           // Private key (hex encoded, with or without 0x prefix)
+}
+
+message BurnBatchERC1155Response {
+  string tx_hash = 1;              // Transaction hash
+  string contract_address = 2;     // Contract address
+  string account_address = 3;      // Account address
+  repeated string token_ids = 4;   // Token IDs
+  repeated string amounts = 5;     // Amounts burned
+}
+
+message DeployERC1155Request {
+  message InitialOwner {
+    string address = 1; // Initial owner address
+  }
+
+  string uri = 1;                 // Metadata URI template
+  string private_key = 2;         // Private key of the deployer
+  string initial_owner = 3;       // Initial owner address (optional, defaults to deployer)
+}
+
+message DeployERC1155Response {
+  string tx_hash = 1;           // Transaction hash
+  string contract_address = 2;  // Deployed contract address
+  string deployer_address = 3;  // Deployer address
+  string uri = 4;               // Metadata URI template
+}

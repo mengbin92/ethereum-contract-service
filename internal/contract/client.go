@@ -5,7 +5,9 @@ import (
 	"context"
 
 	"eth-contract-service/internal/errors"
+	"eth-contract-service/provider/contract/erc1155"
 	"eth-contract-service/provider/contract/erc20"
+	"eth-contract-service/provider/contract/erc721"
 	"eth-contract-service/provider/eth"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -112,6 +114,36 @@ func (c *Client) GetAddressFromPrivateKey(privateKey []byte) (common.Address, er
 		return common.Address{}, pkgErrors.Wrap(errors.ErrInvalidPrivateKey, err.Error())
 	}
 	return crypto.PubkeyToAddress(key.PublicKey), nil
+}
+
+// GetERC721Token creates an ERC721 token contract instance
+func (c *Client) GetERC721Token(contractAddr common.Address) (*erc721.Erc721, error) {
+	client := eth.GetClient()
+	if client == nil {
+		return nil, pkgErrors.Wrap(errors.ErrClientNotInitialized, "failed to get ethereum client")
+	}
+
+	token, err := erc721.NewErc721(contractAddr, client)
+	if err != nil {
+		return nil, pkgErrors.Wrapf(err, "failed to create ERC721 instance for address %s", contractAddr.Hex())
+	}
+
+	return token, nil
+}
+
+// GetERC1155Token creates an ERC1155 token contract instance
+func (c *Client) GetERC1155Token(contractAddr common.Address) (*erc1155.Erc1155, error) {
+	client := eth.GetClient()
+	if client == nil {
+		return nil, pkgErrors.Wrap(errors.ErrClientNotInitialized, "failed to get ethereum client")
+	}
+
+	token, err := erc1155.NewErc1155(contractAddr, client)
+	if err != nil {
+		return nil, pkgErrors.Wrapf(err, "failed to create ERC1155 instance for address %s", contractAddr.Hex())
+	}
+
+	return token, nil
 }
 
 // ValidateClient validates that the Ethereum client is initialized

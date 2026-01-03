@@ -22,7 +22,7 @@ import (
 // It provides methods for interacting with ERC20 tokens.
 type ERC20Service struct {
 	pb.UnimplementedERC20Server
-	logger       *log.Helper
+	logger         *log.Helper
 	contractClient *contract.Client
 }
 
@@ -235,7 +235,6 @@ func (s *ERC20Service) TransferERC20(ctx context.Context, req *pb.TransferERC20R
 		Amount:          req.Amount,
 	}, nil
 }
-
 
 // ApproveERC20 approves the spender to spend ERC20 tokens.
 func (s *ERC20Service) ApproveERC20(ctx context.Context, req *pb.ApproveERC20Request) (*pb.ApproveERC20Response, error) {

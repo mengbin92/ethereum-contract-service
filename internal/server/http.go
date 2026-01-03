@@ -3,6 +3,8 @@ package server
 
 import (
 	erc20V1 "eth-contract-service/api/erc20/v1"
+	erc1155V1 "eth-contract-service/api/erc1155/v1"
+	erc721V1 "eth-contract-service/api/erc721/v1"
 	"eth-contract-service/internal/conf"
 	"eth-contract-service/internal/service"
 
@@ -52,6 +54,14 @@ func NewHTTPServer(c *conf.Server, logger log.Logger) *http.Server {
 	// Register ERC20 service
 	erc20Service := service.NewERC20Service(logger)
 	erc20V1.RegisterERC20HTTPServer(srv, erc20Service)
+
+	// Register ERC1155 service
+	erc1155Service := service.NewERC1155Service(logger)
+	erc1155V1.RegisterERC1155HTTPServer(srv, erc1155Service)
+
+	// Register ERC721 service
+	erc721Service := service.NewERC721Service(logger)
+	erc721V1.RegisterERC721HTTPServer(srv, erc721Service)
 
 	return srv
 }

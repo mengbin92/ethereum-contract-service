@@ -3,10 +3,265 @@
 
 openapi: 3.0.3
 info:
-    title: ERC20 API
-    description: ERC20 service provides ERC20 token interaction endpoints
+    title: ""
     version: 0.0.1
 paths:
+    /api/v1/erc1155/balance:
+        get:
+            tags:
+                - ERC1155
+            description: GetERC1155Balance returns the balance of an address for a specific token ID
+            operationId: ERC1155_GetERC1155Balance
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: accountAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: tokenId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.GetERC1155BalanceResponse'
+    /api/v1/erc1155/balance-batch:
+        get:
+            tags:
+                - ERC1155
+            description: GetERC1155BalancesBatch returns the balance of multiple addresses for multiple token IDs
+            operationId: ERC1155_GetERC1155BalancesBatch
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: accounts
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+                - name: tokenIds
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.GetERC1155BalancesBatchResponse'
+    /api/v1/erc1155/burn:
+        post:
+            tags:
+                - ERC1155
+            description: BurnERC1155 burns ERC1155 tokens
+            operationId: ERC1155_BurnERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.BurnERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.BurnERC1155Response'
+    /api/v1/erc1155/burn-batch:
+        post:
+            tags:
+                - ERC1155
+            description: BurnBatchERC1155 burns multiple ERC1155 tokens
+            operationId: ERC1155_BurnBatchERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.BurnBatchERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.BurnBatchERC1155Response'
+    /api/v1/erc1155/deploy:
+        post:
+            tags:
+                - ERC1155
+            description: DeployERC1155 deploys a new ERC1155 token contract
+            operationId: ERC1155_DeployERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.DeployERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.DeployERC1155Response'
+    /api/v1/erc1155/is-approved-for-all:
+        get:
+            tags:
+                - ERC1155
+            description: IsApprovedForAllERC1155 checks if an operator is approved for all tokens of an owner
+            operationId: ERC1155_IsApprovedForAllERC1155
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: accountAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: operatorAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.IsApprovedForAllERC1155Response'
+    /api/v1/erc1155/mint:
+        post:
+            tags:
+                - ERC1155
+            description: MintERC1155 mints new ERC1155 tokens
+            operationId: ERC1155_MintERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.MintERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.MintERC1155Response'
+    /api/v1/erc1155/mint-batch:
+        post:
+            tags:
+                - ERC1155
+            description: MintBatchERC1155 mints multiple ERC1155 tokens
+            operationId: ERC1155_MintBatchERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.MintBatchERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.MintBatchERC1155Response'
+    /api/v1/erc1155/safe-batch-transfer:
+        post:
+            tags:
+                - ERC1155
+            description: SafeBatchTransferERC1155 safely transfers multiple ERC1155 tokens
+            operationId: ERC1155_SafeBatchTransferERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.SafeBatchTransferERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.SafeBatchTransferERC1155Response'
+    /api/v1/erc1155/safe-transfer:
+        post:
+            tags:
+                - ERC1155
+            description: SafeTransferERC1155 transfers an ERC1155 token from one address to another
+            operationId: ERC1155_SafeTransferERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.SafeTransferERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.SafeTransferERC1155Response'
+    /api/v1/erc1155/set-approval-for-all:
+        post:
+            tags:
+                - ERC1155
+            description: SetApprovalForAllERC1155 enables or disables approval for a third party ("operator") to manage all tokens
+            operationId: ERC1155_SetApprovalForAllERC1155
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc1155.v1.SetApprovalForAllERC1155Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.SetApprovalForAllERC1155Response'
+    /api/v1/erc1155/token-uri:
+        get:
+            tags:
+                - ERC1155
+            description: GetERC1155TokenURI returns the URI for a specific token ID
+            operationId: ERC1155_GetERC1155TokenURI
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: tokenId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc1155.v1.GetERC1155TokenURIResponse'
     /api/v1/erc20/allowance:
         get:
             tags:
@@ -214,8 +469,584 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.erc20.v1.TransferFromERC20Response'
+    /api/v1/erc721/approve:
+        post:
+            tags:
+                - ERC721
+            description: ApproveERC721 approves another address to transfer the specified token
+            operationId: ERC721_ApproveERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.ApproveERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.ApproveERC721Response'
+    /api/v1/erc721/approved:
+        get:
+            tags:
+                - ERC721
+            description: GetERC721Approved returns the approved address for a token
+            operationId: ERC721_GetERC721Approved
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: tokenId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.GetERC721ApprovedResponse'
+    /api/v1/erc721/balance:
+        get:
+            tags:
+                - ERC721
+            description: GetERC721Balance returns the ERC721 token balance (number of NFTs) of the specified address
+            operationId: ERC721_GetERC721Balance
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: ownerAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.GetERC721BalanceResponse'
+    /api/v1/erc721/burn:
+        post:
+            tags:
+                - ERC721
+            description: BurnERC721 burns an ERC721 token
+            operationId: ERC721_BurnERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.BurnERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.BurnERC721Response'
+    /api/v1/erc721/deploy:
+        post:
+            tags:
+                - ERC721
+            description: DeployERC721 deploys a new ERC721 token contract
+            operationId: ERC721_DeployERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.DeployERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.DeployERC721Response'
+    /api/v1/erc721/info:
+        get:
+            tags:
+                - ERC721
+            description: GetERC721TokenInfo returns ERC721 token information (name, symbol)
+            operationId: ERC721_GetERC721TokenInfo
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.GetERC721TokenInfoResponse'
+    /api/v1/erc721/is-approved-for-all:
+        get:
+            tags:
+                - ERC721
+            description: IsApprovedForAllERC721 checks if an operator is approved for all tokens of an owner
+            operationId: ERC721_IsApprovedForAllERC721
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: ownerAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: operatorAddress
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.IsApprovedForAllERC721Response'
+    /api/v1/erc721/owner-of:
+        get:
+            tags:
+                - ERC721
+            description: GetERC721OwnerOf returns the owner of a specific token
+            operationId: ERC721_GetERC721OwnerOf
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: tokenId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.GetERC721OwnerOfResponse'
+    /api/v1/erc721/safe-mint:
+        post:
+            tags:
+                - ERC721
+            description: SafeMintERC721 safely mints a new ERC721 token
+            operationId: ERC721_SafeMintERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.SafeMintERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.SafeMintERC721Response'
+    /api/v1/erc721/safe-transfer:
+        post:
+            tags:
+                - ERC721
+            description: SafeTransferERC721 safely transfers an ERC721 token (calls onERC721Received on recipient)
+            operationId: ERC721_SafeTransferERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.SafeTransferERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.SafeTransferERC721Response'
+    /api/v1/erc721/safe-transfer-with-data:
+        post:
+            tags:
+                - ERC721
+            description: SafeTransferERC721WithData safely transfers an ERC721 token with additional data
+            operationId: ERC721_SafeTransferERC721WithData
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.SafeTransferERC721WithDataRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.SafeTransferERC721WithDataResponse'
+    /api/v1/erc721/set-approval-for-all:
+        post:
+            tags:
+                - ERC721
+            description: SetApprovalForAllERC721 enables or disables approval for a third party ("operator") to manage all tokens
+            operationId: ERC721_SetApprovalForAllERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.SetApprovalForAllERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.SetApprovalForAllERC721Response'
+    /api/v1/erc721/token-uri:
+        get:
+            tags:
+                - ERC721
+            description: GetERC721TokenURI returns the URI for a specific token
+            operationId: ERC721_GetERC721TokenURI
+            parameters:
+                - name: contractAddress
+                  in: query
+                  schema:
+                    type: string
+                - name: tokenId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.GetERC721TokenURIResponse'
+    /api/v1/erc721/transfer:
+        post:
+            tags:
+                - ERC721
+            description: TransferERC721 transfers an ERC721 token from the caller to the specified address
+            operationId: ERC721_TransferERC721
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.erc721.v1.TransferERC721Request'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.erc721.v1.TransferERC721Response'
 components:
     schemas:
+        api.erc1155.v1.BurnBatchERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+                privateKey:
+                    type: string
+        api.erc1155.v1.BurnBatchERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+        api.erc1155.v1.BurnERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc1155.v1.BurnERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+        api.erc1155.v1.DeployERC1155Request:
+            type: object
+            properties:
+                uri:
+                    type: string
+                privateKey:
+                    type: string
+                initialOwner:
+                    type: string
+        api.erc1155.v1.DeployERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                deployerAddress:
+                    type: string
+                uri:
+                    type: string
+        api.erc1155.v1.GetERC1155BalanceResponse:
+            type: object
+            properties:
+                balance:
+                    type: string
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc1155.v1.GetERC1155BalancesBatchResponse:
+            type: object
+            properties:
+                balances:
+                    type: array
+                    items:
+                        type: string
+                contractAddress:
+                    type: string
+                accounts:
+                    type: array
+                    items:
+                        type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+        api.erc1155.v1.GetERC1155TokenURIResponse:
+            type: object
+            properties:
+                tokenUri:
+                    type: string
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc1155.v1.IsApprovedForAllERC1155Response:
+            type: object
+            properties:
+                approved:
+                    type: boolean
+                contractAddress:
+                    type: string
+                accountAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+        api.erc1155.v1.MintBatchERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+                data:
+                    type: string
+                    format: bytes
+                privateKey:
+                    type: string
+        api.erc1155.v1.MintBatchERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+        api.erc1155.v1.MintERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+                data:
+                    type: string
+                    format: bytes
+                privateKey:
+                    type: string
+        api.erc1155.v1.MintERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+        api.erc1155.v1.SafeBatchTransferERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+                data:
+                    type: string
+                    format: bytes
+                privateKey:
+                    type: string
+        api.erc1155.v1.SafeBatchTransferERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenIds:
+                    type: array
+                    items:
+                        type: string
+                amounts:
+                    type: array
+                    items:
+                        type: string
+        api.erc1155.v1.SafeTransferERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+                data:
+                    type: string
+                    format: bytes
+                privateKey:
+                    type: string
+        api.erc1155.v1.SafeTransferERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                amount:
+                    type: string
+        api.erc1155.v1.SetApprovalForAllERC1155Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+                approved:
+                    type: boolean
+                privateKey:
+                    type: string
+        api.erc1155.v1.SetApprovalForAllERC1155Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+                approved:
+                    type: boolean
         api.erc20.v1.ApproveERC20Request:
             type: object
             properties:
@@ -427,5 +1258,259 @@ components:
                     type: string
                 amount:
                     type: string
+        api.erc721.v1.ApproveERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                approvedAddress:
+                    type: string
+                tokenId:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc721.v1.ApproveERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                approvedAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.BurnERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc721.v1.BurnERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.DeployERC721Request:
+            type: object
+            properties:
+                name:
+                    type: string
+                symbol:
+                    type: string
+                privateKey:
+                    type: string
+                initialOwner:
+                    type: string
+        api.erc721.v1.DeployERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                deployerAddress:
+                    type: string
+                name:
+                    type: string
+                symbol:
+                    type: string
+        api.erc721.v1.GetERC721ApprovedResponse:
+            type: object
+            properties:
+                approvedAddress:
+                    type: string
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.GetERC721BalanceResponse:
+            type: object
+            properties:
+                balance:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+        api.erc721.v1.GetERC721OwnerOfResponse:
+            type: object
+            properties:
+                ownerAddress:
+                    type: string
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.GetERC721TokenInfoResponse:
+            type: object
+            properties:
+                name:
+                    type: string
+                symbol:
+                    type: string
+                contractAddress:
+                    type: string
+        api.erc721.v1.GetERC721TokenURIResponse:
+            type: object
+            properties:
+                tokenUri:
+                    type: string
+                contractAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.IsApprovedForAllERC721Response:
+            type: object
+            properties:
+                approved:
+                    type: boolean
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+        api.erc721.v1.SafeMintERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc721.v1.SafeMintERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.SafeTransferERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc721.v1.SafeTransferERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.SafeTransferERC721WithDataRequest:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                data:
+                    type: string
+                    format: bytes
+                privateKey:
+                    type: string
+        api.erc721.v1.SafeTransferERC721WithDataResponse:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+        api.erc721.v1.SetApprovalForAllERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+                approved:
+                    type: boolean
+                privateKey:
+                    type: string
+        api.erc721.v1.SetApprovalForAllERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                ownerAddress:
+                    type: string
+                operatorAddress:
+                    type: string
+                approved:
+                    type: boolean
+        api.erc721.v1.TransferERC721Request:
+            type: object
+            properties:
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
+                privateKey:
+                    type: string
+        api.erc721.v1.TransferERC721Response:
+            type: object
+            properties:
+                txHash:
+                    type: string
+                contractAddress:
+                    type: string
+                fromAddress:
+                    type: string
+                toAddress:
+                    type: string
+                tokenId:
+                    type: string
 tags:
+    - name: ERC1155
+      description: ERC1155 service provides ERC1155 (Multi-Token) token interaction endpoints
     - name: ERC20
+      description: ERC20 service provides ERC20 token interaction endpoints
+    - name: ERC721
+      description: ERC721 service provides ERC721 (NFT) token interaction endpoints

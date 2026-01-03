@@ -2,7 +2,9 @@
 package server
 
 import (
+	erc1155V1 "eth-contract-service/api/erc1155/v1"
 	erc20V1 "eth-contract-service/api/erc20/v1"
+	erc721V1 "eth-contract-service/api/erc721/v1"
 	"eth-contract-service/internal/conf"
 	"eth-contract-service/internal/service"
 
@@ -42,6 +44,13 @@ func NewGRPCServer(c *conf.Server, logger log.Logger) *grpc.Server {
 	erc20Service := service.NewERC20Service(logger)
 	erc20V1.RegisterERC20Server(srv, erc20Service)
 
+	// Register ERC1155 service
+	erc1155Service := service.NewERC1155Service(logger)
+	erc1155V1.RegisterERC1155Server(srv, erc1155Service)
+
+	// Register ERC721 service
+	erc721Service := service.NewERC721Service(logger)
+	erc721V1.RegisterERC721Server(srv, erc721Service)
+
 	return srv
 }
-
